@@ -1,0 +1,534 @@
+/*
+ * The viewer's own chrome. Colours come from the IDE (`--openidea-*`, set on
+ * the frame's root and updated with the theme); the fallbacks are only for a
+ * page opened outside OpenIDEA.
+ */
+
+:root {
+  --bg: var(--openidea-bg, #1e1f22);
+  --bg-elevated: var(--openidea-bg-elevated, #2b2d30);
+  --bg-hover: var(--openidea-bg-hover, #35373b);
+  --bg-selected: var(--openidea-bg-selected, #2e436e);
+  --bg-input: var(--openidea-bg-input, #1a1b1e);
+  --fg: var(--openidea-fg, #dfe1e5);
+  --fg-strong: var(--openidea-fg-strong, #ffffff);
+  --fg-muted: var(--openidea-fg-muted, #9aa0a6);
+  --border: var(--openidea-border, #3a3d41);
+  --focus-ring: var(--openidea-focus-ring, #4a8cf7);
+  --accent: var(--openidea-accent, #4a8cf7);
+  --danger: var(--openidea-danger, #e5534b);
+  --link: var(--openidea-link, #6ba6ff);
+  --font-ui: var(--openidea-font-ui, system-ui, -apple-system, "Segoe UI", sans-serif);
+  --font-mono: var(--openidea-font-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  --font-size: var(--openidea-font-size, 13px);
+  --toolbar-height: 36px;
+  --sidebar-width: 236px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  color-scheme: light;
+  /* Only used outside OpenIDEA: the IDE always sets --openidea-*. */
+  --bg: var(--openidea-bg, #ffffff);
+  --bg-elevated: var(--openidea-bg-elevated, #f4f5f7);
+  --bg-hover: var(--openidea-bg-hover, #e9ebee);
+  --bg-selected: var(--openidea-bg-selected, #dbe7ff);
+  --bg-input: var(--openidea-bg-input, #ffffff);
+  --fg: var(--openidea-fg, #1f2328);
+  --fg-strong: var(--openidea-fg-strong, #000000);
+  --fg-muted: var(--openidea-fg-muted, #5f6672);
+  --border: var(--openidea-border, #d3d6db);
+  --accent: var(--openidea-accent, #2f6feb);
+  --danger: var(--openidea-danger, #c43c35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font: var(--font-size) var(--font-ui);
+}
+
+#app {
+  display: grid;
+  grid-template-rows: var(--toolbar-height) minmax(0, 1fr) auto;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ toolbar */
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  min-width: 0;
+}
+
+#toolbar .group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+#toolbar .group.search {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+#toolbar .group.left {
+  padding-right: 4px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--fg-strong);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.page-number {
+  width: 40px;
+  padding: 3px 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--fg);
+  font: inherit;
+  text-align: right;
+}
+
+.page-count,
+.scale-label,
+.search-count {
+  color: var(--fg-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.scale-label {
+  min-width: 62px;
+  text-align: center;
+}
+
+.view-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.view-select {
+  max-width: 118px;
+  height: 26px;
+  padding: 2px 20px 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-input);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.view-select:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.view-select:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.search-count {
+  min-width: 58px;
+  text-align: center;
+  font-size: 11.5px;
+}
+
+.search-count.empty {
+  color: var(--danger);
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 1 260px;
+  min-width: 120px;
+}
+
+.search-wrap .search-icon {
+  position: absolute;
+  left: 6px;
+  display: inline-flex;
+  color: var(--fg-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 4px 8px 4px 26px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-input);
+  color: var(--fg);
+  font: inherit;
+}
+
+.search-input:focus,
+.page-number:focus {
+  outline: none;
+  border-color: var(--focus-ring);
+}
+
+input::placeholder {
+  color: var(--fg-muted);
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* --------------------------------------------------------------------- main */
+
+#main {
+  display: flex;
+  min-height: 0;
+}
+
+#sidebar {
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  min-height: 0;
+}
+
+#sidebar[hidden] {
+  display: none;
+}
+
+.sidebar-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-tab {
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.sidebar-tab:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--fg);
+}
+
+.sidebar-tab.active {
+  background: var(--bg-selected);
+  color: var(--fg-strong);
+}
+
+.sidebar-tab:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.sidebar-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 6px 0 12px;
+}
+
+.outline-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 8px 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.outline-row:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.outline-row:disabled {
+  color: var(--fg-muted);
+  cursor: default;
+}
+
+.outline-title {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outline-page {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  padding: 8px 10px;
+}
+
+.thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.thumb:hover {
+  background: var(--bg-hover);
+}
+
+.thumb.current {
+  border-color: var(--accent);
+  background: var(--bg-selected);
+  color: var(--fg-strong);
+}
+
+.thumb-sheet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.thumb-sheet canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.thumb.loading .thumb-sheet::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--fg-muted);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -------------------------------------------------------------------- stage */
+
+#stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  background: var(--bg-elevated);
+}
+
+#viewer-container {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  outline: none;
+  scrollbar-color: var(--fg-muted) transparent;
+  /* Reserved whether or not a scrollbar is shown: "fit width" then keeps its
+     width instead of overflowing by the scrollbar's. */
+  scrollbar-gutter: stable;
+}
+
+.pdfViewer {
+  padding: 12px 0 18px;
+}
+
+/* pdf.js draws a white sheet: keep the page white in both themes. */
+.pdfViewer .page {
+  border: 1px solid rgb(0 0 0 / 0.18);
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.28);
+}
+
+.pdfViewer .textLayer ::selection {
+  background: rgb(76 141 255 / 0.35);
+}
+
+/* ------------------------------------------------------------------ overlay */
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bg);
+}
+
+#overlay[hidden] {
+  display: none;
+}
+
+.card {
+  max-width: 460px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.25);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.card p {
+  margin: 0 0 14px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.card .detail {
+  margin: 0 0 14px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--fg-muted);
+  font: 11.5px var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.card .hint {
+  margin: 12px 0 0;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.card .actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--bg-hover);
+}
+
+.button.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--openidea-fg-on-accent, #fff);
+}
+
+.button.primary:hover {
+  filter: brightness(1.08);
+}
+
+/* ------------------------------------------------------------------- status */
+
+#status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 10px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg-muted);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+#status .status-left {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A file dragged over the page: outline the whole frame. */
+body.dropping #stage {
+  outline: 2px dashed var(--accent);
+  outline-offset: -6px;
+}

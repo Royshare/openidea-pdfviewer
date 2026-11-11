@@ -1,0 +1,69 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /Outlines 10 0 R /PageMode /UseOutlines >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 4 0 R 5 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 6 0 R >> >> /Contents 7 0 R >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 6 0 R >> >> /Contents 8 0 R >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 6 0 R >> >> /Contents 9 0 R >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+7 0 obj
+<< /Length 141 >>
+stream
+BT /F1 24 Tf 72 760 Td (Fast Reader Test Fixture) Tj ET
+BT /F1 12 Tf 72 720 Td (Page one. The quick brown fox jumps over the lazy dog.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Length 110 >>
+stream
+BT /F1 24 Tf 72 760 Td (Chapter One) Tj ET
+BT /F1 12 Tf 72 720 Td (Page two. Bookmarks reach this page.) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Length 114 >>
+stream
+BT /F1 24 Tf 72 760 Td (Chapter Two) Tj ET
+BT /F1 12 Tf 72 720 Td (Page three. The quick brown fox is back.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Outlines /First 11 0 R /Last 12 0 R /Count 2 >>
+endobj
+11 0 obj
+<< /Title (Chapter One) /Parent 10 0 R /Next 12 0 R /Dest [4 0 R /Fit] >>
+endobj
+12 0 obj
+<< /Title (Chapter Two) /Parent 10 0 R /Prev 11 0 R /Dest [5 0 R /Fit] >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000098 00000 n 
+0000000167 00000 n 
+0000000293 00000 n 
+0000000419 00000 n 
+0000000545 00000 n 
+0000000615 00000 n 
+0000000807 00000 n 
+0000000968 00000 n 
+0000001133 00000 n 
+0000001207 00000 n 
+0000001297 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+1387
+%%EOF

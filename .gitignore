@@ -1,0 +1,16 @@
+/target
+node_modules/
+.npm-cache/
+.cargo-home/
+.pnpm-store/
+# Built by `pnpm --dir web-src run build`; shipped in the package, not in git.
+/web/
+/web.sources
+.DS_Store
+
+# Installable package built by ./package.sh
+dist/package/
+dist/*.oiplugin
+
+# OpenIDEA per-user IDE metadata
+.openidea/

@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust and Wasm target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip2
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web-src/pnpm-lock.yaml
+
+      - name: Run Rust tests
+        run: cargo test --locked
+
+      - name: Install web dependencies
+        run: pnpm --dir web-src install --frozen-lockfile
+
+      - name: Typecheck web source
+        run: pnpm --dir web-src run typecheck
+
+      - name: Install Chromium for smoke tests
+        run: pnpm --dir web-src exec playwright-core install --with-deps chromium
+
+      - name: Build Wasm and web page
+        run: ./build.sh
+
+      - name: Run browser smoke tests
+        run: pnpm --dir web-src test
+
+      - name: Install OpenIDEA plugin CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/bin"
+          tag="$(gh release view --repo l0ng-ai/openidea --json tagName -q .tagName)"
+          if gh release download "$tag" --repo l0ng-ai/openidea -p openidea-plugin-linux-x86_64.gz -D "$RUNNER_TEMP"; then
+            gunzip -c "$RUNNER_TEMP/openidea-plugin-linux-x86_64.gz" > "$HOME/.local/bin/openidea-plugin"
+            chmod +x "$HOME/.local/bin/openidea-plugin"
+          else
+            cargo install --locked --git https://github.com/l0ng-ai/openidea ide-host --bin openidea-plugin
+          fi
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/bin:$PATH"
+          openidea-plugin --version
+
+      - name: Validate plugin and package
+        run: |
+          set -euo pipefail
+          openidea-plugin --version
+          openidea-plugin check
+          ./package.sh
+          id="$(sed -n 's/^id = "\([^"]*\)".*/\1/p' plugin.toml | head -n 1)"
+          version="$(sed -n 's/^version = "\([^"]*\)".*/\1/p' plugin.toml | head -n 1)"
+          package="dist/$id-$version.oiplugin"
+          test -f "$package"
+          openidea-plugin check "$package"

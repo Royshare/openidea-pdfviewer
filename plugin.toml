@@ -1,0 +1,26 @@
+id = "myrrr.pdfviewer"
+name = "PDF Viewer"
+version = "0.1.0"
+description = "Reads .pdf files in the IDE: continuous pages, a text layer you can select and copy, links, an outline and thumbnails, whole-document search with highlighting, zoom and rotation, in the IDE's own theme. API 1.5 opens project PDFs directly without a path-specific filesystem grant; the optional project.read permission enables the component fallback. Rendering runs in the plugin's sandboxed page on pdf.js — no network, nothing leaves the machine."
+authors = ["MyRRR"]
+license = "Apache-2.0"
+change-notes = "0.1.0 — API 1.5. Reads the custom editor's file bytes directly (up to 64 MiB), with project.read-bytes as a project-scoped fallback (up to 16 MiB). Removes the broad fs.read path grant; project.read is optional for the fallback."
+categories = ["tools"]
+engines.openidea = "^1.5"
+
+# Built by ./build.sh. The code is loaded when the editor is shown.
+wasm = "dist/plugin.wasm"
+activation = ["on-view:viewer"]
+
+# No path-wide fs.read grant. The page's API 1.5 document.bytes() path needs
+# no plugin capability; project.read is optional for the code-side fallback.
+[capabilities]
+optional = ["project.read"]
+
+[[contributes.customEditors]]
+id = "viewer"
+title = "PDF"
+patterns = ["*.pdf"]
+priority = "default"
+layout = "tab"
+web = "web/index.html"

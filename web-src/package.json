@@ -1,0 +1,20 @@
+{
+  "name": "openidea-pdfviewer-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "pdfjs-dist": "6.5.438"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright-core": "^1.65.0",
+    "typescript": "5.9.3"
+  },
+  "description": "The PDF viewer plugin's page: pdf.js and the reader UI, built into ../web."
+}
