@@ -225,4 +225,5 @@ must still be signed with the publisher's private key as described above.
 
 Apache-2.0. The page bundles [pdf.js](https://github.com/mozilla/pdf.js), also
 Apache-2.0; its licence headers are kept in `web/pdf.worker.mjs` and
-`web/wasm/`.
+`web/wasm/`. The plugin icon adapts Phosphor's `FilePdf` Regular glyph (MIT);
+see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

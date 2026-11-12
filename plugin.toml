@@ -6,6 +6,7 @@ authors = ["MyRRR"]
 license = "Apache-2.0"
 change-notes = "0.1.0 — API 1.5. Reads the custom editor's file bytes directly (up to 64 MiB), with project.read-bytes as a project-scoped fallback (up to 16 MiB). Removes the broad fs.read path grant; project.read is optional for the fallback."
 categories = ["tools"]
+icon = "assets/icon.svg"
 engines.openidea = "^1.5"
 
 # Built by ./build.sh. The code is loaded when the editor is shown.
