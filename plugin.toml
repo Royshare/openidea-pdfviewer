@@ -1,13 +1,14 @@
 id = "myrrr.pdfviewer"
 name = "PDF Viewer"
-version = "0.1.0"
-description = "Reads .pdf files in the IDE: continuous pages, a text layer you can select and copy, links, an outline and thumbnails, whole-document search with highlighting, zoom and rotation, in the IDE's own theme. API 1.5 opens project PDFs directly without a path-specific filesystem grant; the optional project.read permission enables the component fallback. Rendering runs in the plugin's sandboxed page on pdf.js — no network, nothing leaves the machine."
+version = "0.1.1"
+description = "Embedded PDF reader for OpenIDEA 0.1.44+ (Plugin API 1.7+). OpenIDEA's system-associated app opener handles PDFs first; this viewer remains available as a custom-editor fallback."
 authors = ["MyRRR"]
 license = "Apache-2.0"
-change-notes = "0.1.0 — API 1.5. Reads the custom editor's file bytes directly (up to 64 MiB), with project.read-bytes as a project-scoped fallback (up to 16 MiB). Removes the broad fs.read path grant; project.read is optional for the fallback."
+change-notes = "0.1.1 — Build against OpenIDEA 0.1.44 / Plugin API 1.7. OpenIDEA's associated-app opener handles PDFs before contributed editors, leaving this reader as a fallback."
 categories = ["tools"]
 icon = "assets/icon.svg"
-engines.openidea = "^1.5"
+# Built against OpenIDEA 0.1.44's Plugin API 1.7.
+engines.openidea = "^1.7"
 
 # Built by ./build.sh. The code is loaded when the editor is shown.
 wasm = "dist/plugin.wasm"

@@ -217,6 +217,27 @@ const waitFor = async (frame, predicate, timeout = 15_000) => {
   check("document text path: text layer present", state.text > 0, `${state.text} spans`);
   check("document text path: no chooser", !state.chooser);
 
+  const ctrlWheel = await frame.evaluate(() => {
+    const event = new WheelEvent("wheel", { deltaY: -100, ctrlKey: true, bubbles: true, cancelable: true });
+    document.querySelector(".pdfViewer .page")?.dispatchEvent(event);
+    return { prevented: event.defaultPrevented, scale: document.querySelector(".scale-label")?.textContent ?? "" };
+  });
+  check("Ctrl+wheel zooms the PDF and prevents browser zoom", ctrlWheel.prevented && ctrlWheel.scale.endsWith("%"), JSON.stringify(ctrlWheel));
+  const metaWheel = await frame.evaluate(() => {
+    const before = document.querySelector(".scale-label")?.textContent ?? "";
+    const event = new WheelEvent("wheel", { deltaY: -100, metaKey: true, bubbles: true, cancelable: true });
+    document.querySelector(".pdfViewer .page")?.dispatchEvent(event);
+    return { prevented: event.defaultPrevented, before, after: document.querySelector(".scale-label")?.textContent ?? "" };
+  });
+  check("Cmd+wheel zooms the PDF", metaWheel.prevented && metaWheel.after !== metaWheel.before, JSON.stringify(metaWheel));
+  const wheelOut = await frame.evaluate(() => {
+    const before = document.querySelector(".scale-label")?.textContent ?? "";
+    const event = new WheelEvent("wheel", { deltaY: 100, ctrlKey: true, bubbles: true, cancelable: true });
+    document.querySelector(".pdfViewer .page")?.dispatchEvent(event);
+    return { prevented: event.defaultPrevented, before, after: document.querySelector(".scale-label")?.textContent ?? "" };
+  });
+  check("modifier+wheel down zooms out", wheelOut.prevented && Number.parseFloat(wheelOut.after) < Number.parseFloat(wheelOut.before), JSON.stringify(wheelOut));
+
   check("continuous layout is selected by default", await frame.inputValue(".view-select") === "continuous");
   await frame.selectOption(".view-select", "single");
   await frame.waitForFunction(() => document.querySelectorAll("#viewer > .page").length === 1);

@@ -1,7 +1,13 @@
 # PDF Viewer for OpenIDEA
 
-A reader for `.pdf` files inside [OpenIDEA](https://github.com/l0ng-ai/openidea):
-double-click a PDF in the project and it opens in its own tab.
+A reader for `.pdf` files inside [OpenIDEA](https://github.com/l0ng-ai/openidea).
+
+**OpenIDEA 0.1.43+ opens PDFs with the system's associated application** (Preview
+on macOS by default). Its opener runs before contributed editors; this plugin
+targets Plugin API 1.7 (OpenIDEA 0.1.44+) as a fallback for configurations that
+still route PDFs to contributed editors. If PDFs open in the reader instead,
+check **Settings › Editor › File Types › Files opened in associated
+applications** and ensure `*.pdf` is listed.
 
 ![A PDF open in the reader](docs/viewer.png)
 
@@ -20,7 +26,7 @@ double-click a PDF in the project and it opens in its own tab.
 
 | | |
 | --- | --- |
-| Plugin API | `^1.5` (built against OpenIDEA 0.1.42) |
+| Plugin API | `^1.7` (built against OpenIDEA 0.1.44) |
 | Capabilities | optional `project.read` (component fallback); direct `document.bytes()` needs no plugin grant |
 | Contributions | one custom editor, `*.pdf` |
 
@@ -46,7 +52,7 @@ handed in this way are kept in the plugin's private cache for later opens.
 `pnpm --dir web-src install && pnpm --dir web-src run build`.
 
 To install a package rather than link the folder, run `./package.sh`. It creates
-`dist/myrrr.pdfviewer-0.1.0.oiplugin` for **Settings › Plugins › Install Plugin
+`dist/myrrr.pdfviewer-0.1.1.oiplugin` for **Settings › Plugins › Install Plugin
 from Package File…**. The package is unsigned, which the install page will note.
 
 ## How it works
@@ -161,12 +167,12 @@ and testing; do not submit it to the registry.
    ./build.sh
    openidea-plugin check
    openidea-plugin pack . --key "$HOME/.config/openidea/keys/myrrr.key" --publisher myrrr
-   shasum -a 256 myrrr.pdfviewer-0.1.0.oiplugin
+   shasum -a 256 myrrr.pdfviewer-0.1.1.oiplugin
    ```
 
    `./package.sh` creates an unsigned local-install package; the signed file
    produced by `openidea-plugin pack` is the one to release and list.
-4. Create a GitHub release tagged `v0.1.0` in the source repository and attach
+4. Create a GitHub release tagged `v0.1.1` in the source repository and attach
    the signed `.oiplugin` file. Keep the tag, release asset, manifest version,
    and registry `version` identical.
 5. Open a first-time publisher/plugin pull request in
@@ -190,8 +196,8 @@ and testing; do not submit it to the registry.
    repository = "https://github.com/Royshare/openidea-pdfviewer"
 
    [[versions]]
-   version = "0.1.0"
-   package = "https://github.com/Royshare/openidea-pdfviewer/releases/download/v0.1.0/myrrr.pdfviewer-0.1.0.oiplugin"
+   version = "0.1.1"
+   package = "https://github.com/Royshare/openidea-pdfviewer/releases/download/v0.1.1/myrrr.pdfviewer-0.1.1.oiplugin"
    sha256 = "<64-character SHA-256 of the signed package>"
    ```
 

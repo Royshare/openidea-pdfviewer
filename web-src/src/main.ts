@@ -214,6 +214,30 @@ function followTheme(): void {
 
 /* ------------------------------------------------------------------- input */
 
+function wireWheelZoom(): void {
+  const container = byId<HTMLDivElement>("viewer-container");
+  container.addEventListener(
+    "wheel",
+    (event) => {
+      if ((!event.ctrlKey && !event.metaKey) || !reader.document || event.deltaY === 0) {
+        return;
+      }
+      // The modifier-wheel gesture is reserved for the PDF, not the browser's
+      // page zoom. Scale proportionally so trackpads and mouse wheels both work.
+      event.preventDefault();
+      const delta =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? event.deltaY * 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? event.deltaY * container.clientHeight
+            : event.deltaY;
+      const boundedDelta = Math.max(-200, Math.min(200, delta));
+      reader.zoomBy(Math.exp(-boundedDelta * 0.0015));
+    },
+    { passive: false },
+  );
+}
+
 function wireKeys(): void {
   document.addEventListener("keydown", (event) => {
     const target = event.target as HTMLElement | null;
@@ -296,6 +320,7 @@ function wireDrop(): void {
 async function main(): Promise<void> {
   followTheme();
   wireKeys();
+  wireWheelZoom();
   wireDrop();
   paintStatus();
   // Nothing to navigate or zoom until a file is in.

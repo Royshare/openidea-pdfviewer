@@ -102,7 +102,7 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
 name = "openidea-pdfviewer"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64",
  "openidea-plugin",
@@ -112,7 +112,7 @@ dependencies = [
 [[package]]
 name = "openidea-plugin"
 version = "0.1.0"
-source = "git+https://github.com/l0ng-ai/openidea?tag=v0.1.42#e702e4da7b0333e81bc818e26be72db1d157ec5d"
+source = "git+https://github.com/l0ng-ai/openidea?tag=v0.1.44#bf36cc08019a1be78c151245c67dcd872a9c37b5"
 dependencies = [
  "serde",
  "serde_json",
