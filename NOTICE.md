@@ -1,4 +1,20 @@
-# Third-party notices
+# Third-party notices (NOTICE)
+
+## pdf.js (pdfjs-dist)
+
+The page bundles [pdf.js](https://github.com/mozilla/pdf.js) by Mozilla and
+contributors, licensed under the Apache License 2.0 (full text in `LICENSE`
+beside this file, and as `web/LICENSE_PDFJS` in the package). Its worker
+(`web/pdf.worker.mjs`) keeps its original licence header.
+
+pdf.js's data files keep their own licences, shipped next to them in the
+package:
+
+- `web/cmaps/LICENSE` — Adobe CMap resources
+- `web/standard_fonts/LICENSE_FOXIT`, `LICENSE_LIBERATION` — Foxit and
+  Liberation fonts
+- `web/iccs/LICENSE` — ICC colour profiles
+- `web/wasm/LICENSE_*` — JBIG2, OpenJPEG, QCMS and QuickJS decoders
 
 ## Phosphor Icons — FilePdf (Regular)
 

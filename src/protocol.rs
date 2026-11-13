@@ -124,9 +124,7 @@ pub fn parse(text: &str) -> Option<Result<Request, (String, String)>> {
                 Some(Err(e)) => return Some(Err((id, e))),
                 Some(Ok(key)) => key,
             };
-            let Some(value) = object.get("value").and_then(Value::as_str) else {
-                return None;
-            };
+            let value = object.get("value").and_then(Value::as_str)?;
             if value.len() > MAX_VALUE {
                 let message = format!(
                     "value of {} bytes is over the {} MiB limit",
@@ -287,7 +285,7 @@ mod tests {
     }
 
     fn parse_err(text: &str) -> (String, String) {
-        parse(text).expect("a request").err().expect("over a limit")
+        parse(text).expect("a request").expect_err("over a limit")
     }
 
     #[test]

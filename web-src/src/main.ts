@@ -248,7 +248,9 @@ function wireKeys(): void {
       toolbar.focusSearch();
       return;
     }
-    if (typing) {
+    // Plain keys only: Cmd/Ctrl/Alt combinations belong to the IDE (Cmd+R must
+    // not rotate the page), and Shift would change what the key means.
+    if (typing || mod || event.altKey) {
       return;
     }
     switch (event.key) {

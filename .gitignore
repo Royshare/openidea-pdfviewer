@@ -8,9 +8,9 @@ node_modules/
 /web.sources
 .DS_Store
 
-# Installable package built by ./package.sh
-dist/package/
-dist/*.oiplugin
+# Build output (plugin.wasm, the unpacked package, signed/unsigned .oiplugin).
+# Releases are built and signed by CI or ./package.sh, never committed.
+/dist/
 
 # OpenIDEA per-user IDE metadata
 .openidea/

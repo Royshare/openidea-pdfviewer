@@ -35,6 +35,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: web-src/pnpm-lock.yaml
 
+      - name: Check Rust formatting and lints
+        run: |
+          cargo fmt --check
+          cargo clippy --locked --all-targets -- -D warnings
+
       - name: Run Rust tests
         run: cargo test --locked
 

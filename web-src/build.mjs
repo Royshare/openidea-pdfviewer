@@ -36,7 +36,9 @@ await build({
   outfile: path.join(out, "viewer.js"),
   minify: true,
   sourcemap: false,
-  legalComments: "none",
+  // Keep pdf.js's licence comments in the bundle (Apache-2.0 requires the
+  // notice to travel with the code).
+  legalComments: "eof",
   // pdf.js's viewer styles reference its toolbar/editor icons; inline them so
   // the page needs no other file (and no network) to look right.
   loader: { ".svg": "dataurl", ".png": "dataurl", ".gif": "dataurl", ".webp": "dataurl" },
@@ -66,6 +68,10 @@ for (const [from, to] of assets) {
   }
   await cp(source, path.join(out, to), { recursive: true });
 }
+
+// pdf.js's own licence text ships beside its code; cmaps/, standard_fonts/,
+// iccs/ and wasm/ already carry theirs.
+await cp(path.join(pdfjs, "LICENSE"), path.join(out, "LICENSE_PDFJS"));
 
 const bytes = async (dir) => {
   const { execFile } = await import("node:child_process");

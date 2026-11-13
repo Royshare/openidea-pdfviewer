@@ -24,7 +24,7 @@ icon_dark=$(field icon-dark)
 [ -n "$id" ] && [ -n "$version" ] || { echo "plugin.toml: no id or version" >&2; exit 1; }
 
 # The manifest names the files; refuse to pack a build that is missing them.
-for f in "$wasm" "$web" LICENSE THIRD-PARTY-NOTICES.md; do
+for f in "$wasm" "$web" LICENSE NOTICE.md; do
   [ -e "$f" ] || { echo "missing $f — run ./build.sh first" >&2; exit 1; }
 done
 for f in "$icon" "$icon_dark"; do
@@ -34,7 +34,7 @@ done
 stage=dist/package
 rm -rf "$stage"
 mkdir -p "$stage/$(dirname "$wasm")"
-cp plugin.toml LICENSE THIRD-PARTY-NOTICES.md "$stage"/
+cp plugin.toml LICENSE NOTICE.md "$stage"/
 cp "$wasm" "$stage/$wasm"
 cp -R "$(dirname "$web")" "$stage/$(dirname "$web")"
 for f in "$icon" "$icon_dark"; do

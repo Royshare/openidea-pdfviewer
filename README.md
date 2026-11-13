@@ -210,9 +210,27 @@ The `project.read` capability remains optional and is used only by the
 project-scoped fallback. The normal API 1.5 custom-editor byte-loading path
 uses `document.bytes()` and requires no plugin capability.
 
+### Releasing an update
+
+Once the publisher and plugin are listed, a new version is one command from a
+clean, pushed `main`:
+
+1. Bump `version` in `plugin.toml`, `Cargo.toml` and `web-src/package.json`,
+   and write the new `change-notes` in `plugin.toml`. Commit and push.
+2. Run `./release.sh`. It runs the tests, builds, signs with
+   `~/.config/openidea/keys/myrrr.key`, and checks the signed package. Then, after
+   each confirmation, it tags `vX.Y.Z`, publishes the GitHub release, verifies
+   the uploaded file matches the signed one, and opens the registry pull
+   request adding the `[[versions]]` entry from your fork.
+
+`./release.sh --dry-run` stops after the signed package is built and checked.
+For the first release add `--public-key <key>` so the script also writes
+`publishers/myrrr.toml`. The private key stays on your machine; the registry
+has no bot or auto-merge, so a maintainer still merges the pull request.
+
 ## CI
 
-GitHub Actions runs the Rust unit tests, TypeScript typecheck, Chromium smoke
+GitHub Actions runs `cargo fmt`/`clippy`, the Rust unit tests, TypeScript typecheck, Chromium smoke
 tests, a complete Wasm/web build, and `openidea-plugin check` on the packaged
 plugin for pushes and pull requests. Locally, run:
 
@@ -232,4 +250,4 @@ must still be signed with the publisher's private key as described above.
 Apache-2.0. The page bundles [pdf.js](https://github.com/mozilla/pdf.js), also
 Apache-2.0; its licence headers are kept in `web/pdf.worker.mjs` and
 `web/wasm/`. The plugin icon adapts Phosphor's `FilePdf` Regular glyph (MIT);
-see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+see [NOTICE.md](NOTICE.md).

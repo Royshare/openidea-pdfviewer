@@ -13,7 +13,7 @@ other paths.
 from pathlib import Path
 
 PAGES = [
-    ("Fast Reader Test Fixture", "Page one. The quick brown fox jumps over the lazy dog."),
+    ("PDF Viewer Test Fixture", "Page one. The quick brown fox jumps over the lazy dog."),
     ("Chapter One", "Page two. Bookmarks reach this page."),
     ("Chapter Two", "Page three. The quick brown fox is back."),
 ]
