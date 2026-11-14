@@ -112,7 +112,7 @@ dependencies = [
 [[package]]
 name = "openidea-plugin"
 version = "0.1.0"
-source = "git+https://github.com/l0ng-ai/openidea?tag=v0.1.44#bf36cc08019a1be78c151245c67dcd872a9c37b5"
+source = "git+https://github.com/l0ng-ai/openidea?tag=v0.1.40#37c2a6048eea89d4f6db645622612358b643862b"
 dependencies = [
  "serde",
  "serde_json",
