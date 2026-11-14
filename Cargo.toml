@@ -14,7 +14,7 @@ crate-type = ["cdylib", "rlib"]
 # The SDK of the OpenIDEA release this plugin is built against.
 openidea-plugin = { git = "https://github.com/l0ng-ai/openidea", tag = "v0.1.44" }
 # The page speaks text; the bytes of a PDF read in place go out base64.
-base64 = "0.22"
+base64 = "0.23"
 serde_json = "1"
 
 [profile.release]
