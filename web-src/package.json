@@ -15,7 +15,7 @@
   "devDependencies": {
     "esbuild": "0.28.2",
     "playwright-core": "^1.65.0",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "description": "The PDF viewer plugin's page: pdf.js and the reader UI, built into ../web."
 }
