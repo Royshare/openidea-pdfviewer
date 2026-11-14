@@ -1,6 +1,7 @@
 /**
  * Client of the plugin's code (`src/protocol.rs`): request/answer over the
- * frame bridge, with ids so two tabs of the viewer never mix their answers up.
+ * frame bridge, with ids (a per-bridge random token plus a counter) so two
+ * tabs of the viewer never mix their answers up.
  *
  * A request that is never answered (the plugin failed to activate, the
  * capability is missing) rejects after a timeout, so the page shows an error
@@ -35,11 +36,28 @@ interface Waiter {
 /** How long a call waits for the component before giving up. */
 const DEFAULT_TIMEOUT_MS = 15_000;
 
+/**
+ * 16 hex characters (64 random bits). The code rejects ids over 64 characters
+ * (`MAX_ID` in `src/protocol.rs`); `<token>:<seq>` stays far below that.
+ */
+function newToken(): string {
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 export class CodeBridge {
   #waiters = new Map<string, Waiter>();
   /** The parts of a `read` that have arrived, by request id. */
   #parts = new Map<string, (Uint8Array | undefined)[]>();
   #seq = 0;
+  /**
+   * Unique to this bridge. Every frame of the view receives every reply, and
+   * each frame counts from zero, so the counter alone would let two tabs with
+   * requests in flight accept each other's answers. Fixed for the bridge's
+   * life: it prefixes every request id, and so every part of a multipart reply.
+   */
+  readonly #token = newToken();
 
   constructor(
     private readonly post: (text: string) => void,
@@ -92,7 +110,7 @@ export class CodeBridge {
   }
 
   #call(payload: Record<string, unknown>, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<Reply | FileReply> {
-    const id = String(++this.#seq);
+    const id = `${this.#token}:${++this.#seq}`;
     return new Promise<Reply | FileReply>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.#waiters.delete(id);

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node test/smoke.mjs"
+    "test": "node test/bridge.mjs && node test/smoke.mjs",
+    "test:bridge": "node test/bridge.mjs"
   },
   "dependencies": {
     "pdfjs-dist": "6.5.438"
