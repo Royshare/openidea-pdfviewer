@@ -1,10 +1,10 @@
 id = "myrrr.pdfviewer"
 name = "PDF Viewer"
-version = "0.1.1"
+version = "0.1.2"
 description = "Embedded PDF reader for OpenIDEA 0.1.44+ (Plugin API 1.7+). OpenIDEA's system-associated app opener handles PDFs first; this viewer remains available as a custom-editor fallback."
 authors = ["MyRRR"]
 license = "Apache-2.0"
-change-notes = "0.1.1 — Build against OpenIDEA 0.1.44 / Plugin API 1.7. OpenIDEA's associated-app opener handles PDFs before contributed editors, leaving this reader as a fallback."
+change-notes = "0.1.2 — Fix a bug where two PDF tabs open at once could show each other's file: request ids are now unique per tab. Builds against OpenIDEA 0.1.44 / Plugin API 1.7."
 categories = ["tools"]
 icon = "assets/icon.svg"
 # Built against OpenIDEA 0.1.44's Plugin API 1.7.
